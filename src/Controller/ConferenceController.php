@@ -36,6 +36,8 @@ class ConferenceController extends AbstractController
         dump($paginator);
 
         return new Response($this->twig->render('conference/show.html.twig', [
+            // now conferences will be available in ALL twig templates, thanks to TwigEventSubscriber
+//            'conferences' => $conferenceRepository->findAll(),
             'conference' => $conference,
             'comments' => $paginator,
             'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
