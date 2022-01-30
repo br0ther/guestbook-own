@@ -1,0 +1,16 @@
+### Send POST request with body as parameters
+POST https://b9f9276f3f4d.rest.akismet.com/1.1/comment-check
+Content-Type: application/x-www-form-urlencoded
+
+blog=https://google.com&comment_type=comment&user_ip=142.250.180.238&is_test=true
+/*
+                    'blog' => 'https://guestbook.example.com',
+                    'comment_type' => 'comment',
+                    'comment_author' => $comment->getAuthor(),
+                    'comment_author_email' => $comment->getEmail(),
+                    'comment_content' => $comment->getText(),
+                    'comment_date_gmt' => $comment->getCreatedAt()->format('c'),
+                    'blog_lang' => 'en',
+                    'blog_charset' => 'UTF-8',
+                    'is_test' => true,
+*/
