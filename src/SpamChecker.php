@@ -3,17 +3,20 @@
     namespace App;
 
     use App\Entity\Comment;
+    use Psr\Log\LoggerInterface;
     use Symfony\Contracts\HttpClient\HttpClientInterface;
 
     class SpamChecker
     {
         private $client;
         private $endpoint;
+        private $logger;
 
-        public function __construct(HttpClientInterface $client, string $akismetKey)
+        public function __construct(HttpClientInterface $client, string $akismetKey, LoggerInterface $logger)
         {
             $this->client = $client;
             $this->endpoint = sprintf('https://%s.rest.akismet.com/1.1/comment-check', $akismetKey);
+            $this->logger = $logger;
         }
 
         /**
@@ -39,12 +42,16 @@
                 'body' => $body,
             ]);
 
+            $this->logger->info('getSpamScore called!!!', [
+                'body' => $body,
+                'response' => $response->getContent()
+            ]);
+//            dump($body, $response, $response->getContent());
+
             $headers = $response->getHeaders();
             if ('discard' === ($headers['x-akismet-pro-tip'][0] ?? '')) {
                 return 2;
             }
-
-//            dump($body, $response, $response->getContent());
 
             $content = $response->getContent();
             if (isset($headers['x-akismet-debug-help'][0])) {
