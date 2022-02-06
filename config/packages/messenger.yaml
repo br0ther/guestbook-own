@@ -7,16 +7,26 @@ framework:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
             # async: '%env(MESSENGER_TRANSPORT_DSN)%'
             async:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                dsn: '%env(RABBITMQ_URL)%'
                 options:
-                    auto_setup: false
+                    auto_setup: true
                     use_notify: true
                     check_delayed_interval: 60000
                 retry_strategy:
                     max_retries: 3
                     multiplier: 2
-            failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
+#            failed: 'doctrine://default?queue_name=failed'
+            failed:
+                dsn: '%env(RABBITMQ_URL)%'
+                options:
+                    exchange:
+                        type: direct
+                        name: failed
+                        default_publish_routing_key: failed
+                    queues:
+                        messages_failed:
+                            binding_keys: [failed]
+                    # sync: 'sync://'
 
         routing:
             # Route your messages to the transports
